@@ -29,11 +29,12 @@ class uniformGrid:
         self.u_dot_s = 1/4*np.pi/(self.parameter.r_v+self.u0[0])**2*\
                         (self.parameter.Q_prod-np.pi*self.parameter.d**4/128/self.parameter.mu/self.parameter.L*\
                         (self.p0[0]-self.p0[-1])+4*np.pi*self.parameter.k*(self.parameter.r_v+self.u0[0])**2*(-3*self.p0[0]+4*self.p0[1]-self.p0[2])/(2*self.dx))
-        self.dot[0] = self.u_dot_s
+        self.u_dot[0] = self.u_dot_s
     
-    def update_u(self):
-        self.u0 = self.u_dot*self.dt+self.u0
-    
+    def update_u(self): # time
+        self.u0 = self.u_dot*self.dt+self.u0 
+        
     def update_u_dummy(self):
-        self.u_dummy = 
+        self.u_dummy = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
+                       (self.u0)
 

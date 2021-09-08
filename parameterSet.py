@@ -17,4 +17,4 @@ class parameter:
 
         self.nu = 0.35 #none
         self.mu = 8.9*1e-4 # Nm^-2s
-        
+        self.alpha = 0.9

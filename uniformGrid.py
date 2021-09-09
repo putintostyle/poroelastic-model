@@ -56,12 +56,26 @@ class uniformGrid:
     def update_p(self):
         p1 = np.zeros(len(self.p0))
         p1[1:-1] = self.p0[1:-1]+\
-            (self.parameter.Q_prod)*\
+            self.dt*(self.parameter.Q_prod)*\
             (self.parameter.alpha*(self.central_diff(self.u_dot, 1, self.dr)+2/self.dr*self.u_dot[1:-1])\
             +self.parameter.kappa*(self.central_diff(self.p0, 2, self.dr)+2/self.r_grid*self.central_diff(self.p0, 1, self.dr))\
             +self.parameter.kappa*self.parameter.rho(self.central_diff(self.u_dummy, 1, self.dr)+2/self.r_grid*self.u_dummy))
         
         p1[0] = 2*self.parameter.G/(1-2*self.parameter.nu)/(self.parameter.alpha-1)*\
                 ((1-self.parameter.nu)*(-3*self.u0[0]+4*self.u0[1]-self.u0[2])/2/self.dr)+2*self.parameter.nu/self.r_grid[0]*self.u0[0]
+        
         p1[-1] = self.p0[-1]
         self.p0 = p1
+
+    def update_u_dot(self):
+        u_dot_1 = np.zeros(len(self.u_dot))
+        u_dot_1[1:-1] = self.u_dot[1:-1]+\
+                        self.dt*(2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
+                        *(self.central_diff(self.u1, 2, self.dr)+2/self.r_grid*self.central_diff(self.u1, 1, self.dr)-2/self.r_grid*self.u1)
+                        -self.parameter.alpha/self.parameter.rho*self.central_diff(self.p0, 1, self.dr)
+                        )
+        u_dot_1[0] = 1/4/(np.pi*(self.r_grid[0]+self.u1[0]**2))\
+                        *((self.parameter.Q_prod-np.pi*self.parameter.d**4/128/self.parameter.mu/self.parameter.L\
+                            +4*self.parameter.k*np.pi*(self.r_grid[0]+self.u1[0])**2)\
+                            *(-3*self.p0[0]+4*self.p0[1]-self.p0[2]))
+        u_dot_1[-1] = 0

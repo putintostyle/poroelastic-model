@@ -2,7 +2,7 @@ import numpy as np
 from parameterSet import *
 class uniformGrid:
     def __init__(self):
-        self.parameter = parameter
+        self.parameter = parameter()
         self.M = self.parameter.M
         self.T = self.parameter.T
         self.dr = (self.parameter.r_s-self.parameter.r_v)/(self.M+1)

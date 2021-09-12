@@ -34,7 +34,7 @@ class uniformGrid:
         self.u1 = self.u_dot*self.dt+self.u0 
         self.u1[-1] = 0
 
-    def update_u_dummy(self): # We only consider interior points
+    def update_u_dummy(self): # We only consider interior points why consider u1
         self.u_dummy = np.zeros(len(self.u_dot))
         self.u_dummy[1:-1] = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
                             *(self.central_diff(self.u1, 2, self.dr)

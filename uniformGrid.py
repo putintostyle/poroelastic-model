@@ -45,12 +45,15 @@ class uniformGrid:
     def update_u_dummy(self): # We only consider interior points
         self.u_dummy = np.zeros(len(self.u_dot))
         self.u_dummy[1:-1] = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
-                        *(self.central_diff(self.u1, 2, self.dr)
+                            *(self.central_diff(self.u1, 2, self.dr)
                             +self.central_diff(self.u1, 1, self.dr)/self.r_grid[1:-1]\
                             -(2/self.r_grid**2)*self.u1[1:-1])\
-                        -self.parameter.alpha/self.parameter.rho*self.central_diff(self.p0, 1, self.dr)
+                            -self.parameter.alpha/self.parameter.rho*self.central_diff(self.p0, 1, self.dr)
         
-        self.u_dummy[0] = None
+        self.u_dummy[0] = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
+                          *((np.array([7, -14, 7])*self.r_grid[0:3]*self.u1[0:3])/self.dr**2/self.r_grid[0]\
+                          -(2/self.r_grid[0]**2)*self.u1[0])\
+                          -self.parameter.alpha/self.parameter.rho*(-3*self.p0[0]+4*self.p0[1]-self.p0[2])/2/self.dr
         self.u_dummy[-1] = 0
     
     def update_p(self):
@@ -79,3 +82,5 @@ class uniformGrid:
                             +4*self.parameter.k*np.pi*(self.r_grid[0]+self.u1[0])**2)\
                             *(-3*self.p0[0]+4*self.p0[1]-self.p0[2]))
         u_dot_1[-1] = 0
+
+    

@@ -11,7 +11,7 @@ class uniformGrid:
         self.r_grid = np.arange(self.parameter.r_v, self.parameter.r_s, self.dr )
         self.t_grid = np.arange(0, self.T, self.dt)
         
-    def IC(self, impact = True):
+    def IC(self, impact = False):
         self.u0 = np.zeros(self.M+1)
         self.p0 = (self.parameter.p_v+self.parameter.mu*self.parameter.R*self.parameter.Q_obs)*np.ones(self.M+1)
         if impact:
@@ -20,16 +20,11 @@ class uniformGrid:
             amp = 0.004
             self.u_dot = amp*np.sin(100*self.r_grid*np.pi)
             
-            self.u_dot[::int((self.M-np.floor(k/2)))] = 0
+            self.u_dot[:int((self.M-np.floor(k/2)))] = 0
+        else:
+            self.u_dot = np.zeros(self.M+1)
         # print(len(self.u_dot))
-        
-    
-    def BC_dot(self):
-        u_dot_s = 1/4*np.pi/(self.parameter.r_v+self.u0[0])**2*\
-                        (self.parameter.Q_prod-np.pi*self.parameter.d**4/128/self.parameter.mu/self.parameter.L*\
-                        (self.p0[0]-self.p0[-1])+4*np.pi*self.parameter.k*(self.parameter.r_v+self.u0[0])**2*(-3*self.p0[0]+4*self.p0[1]-self.p0[2])/(2*self.dr))
-        
-        self.u_dot[0] = u_dot_s
+
 
     def central_diff(self, array, diff_order, dx): # only in interior points, ie, if len(array) = N we only consider array[2::]-array[0::-2]
         if diff_order == 1:
@@ -44,14 +39,14 @@ class uniformGrid:
     def update_u_dummy(self): # We only consider interior points why consider u1
         self.u_dummy = np.zeros(len(self.u_dot))
         self.u_dummy[1:-1] = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
-                            *(self.central_diff(self.u1, 2, self.dr)
-                            +self.central_diff(self.u1, 1, self.dr)/self.r_grid[1:-1]\
+                            *(self.central_diff(self.u0, 2, self.dr)
+                            +self.central_diff(self.u0, 1, self.dr)/self.r_grid[1:-1]\
                             -(2/self.r_grid[1:-1]**2)*self.u1[1:-1])\
                             -self.parameter.alpha/self.parameter.rho*self.central_diff(self.p0, 1, self.dr)
         
         self.u_dummy[0] = 2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
-                          *(np.sum(np.array([7, -14, 7])*self.r_grid[0:3]*self.u1[0:3])/self.dr**2/self.r_grid[0]\
-                          -(2/self.r_grid[0]**2)*self.u1[0])\
+                          *(np.sum(np.array([7, -14, 7])*self.r_grid[0:3]*self.u0[0:3])/self.dr**2/self.r_grid[0]\
+                          -(2/self.r_grid[0]**2)*self.u0[0])\
                           -self.parameter.alpha/self.parameter.rho*(-3*self.p0[0]+4*self.p0[1]-self.p0[2])/2/self.dr
         self.u_dummy[-1] = 0
     
@@ -61,7 +56,7 @@ class uniformGrid:
             self.dt*(self.parameter.Q_prod)*\
             (self.parameter.alpha*(self.central_diff(self.u_dot, 1, self.dr)+2/self.dr*self.u_dot[1:-1])\
             +self.parameter.k*(self.central_diff(self.p0, 2, self.dr)+2/self.r_grid[1:-1]*self.central_diff(self.p0, 1, self.dr))\
-            +self.parameter.k*self.parameter.rho(self.central_diff(self.u_dummy, 1, self.dr)+2/self.r_grid[1:-1]*self.u_dummy[1:-1]))
+            +self.parameter.k*self.parameter.rho*(self.central_diff(self.u_dummy, 1, self.dr)+2/self.r_grid[1:-1]*self.u_dummy[1:-1]))
         
         p1[0] = 2*self.parameter.G/(1-2*self.parameter.nu)/(self.parameter.alpha-1)*\
                 ((1-self.parameter.nu)*(-3*self.u0[0]+4*self.u0[1]-self.u0[2])/2/self.dr)+2*self.parameter.nu/self.r_grid[0]*self.u0[0]
@@ -73,13 +68,13 @@ class uniformGrid:
         u_dot_1 = np.zeros(len(self.u_dot))
         u_dot_1[1:-1] = self.u_dot[1:-1]+\
                         self.dt*(2*self.parameter.G*(1-self.parameter.mu)/self.parameter.rho/(1-2*self.parameter.nu)\
-                        *(self.central_diff(self.u1, 2, self.dr)+2/self.r_grid*self.central_diff(self.u1, 1, self.dr)-2/self.r_grid[1:-1]*self.u1[1:-1])
+                        *(self.central_diff(self.u1, 2, self.dr)+2/self.r_grid[1:-1]*self.central_diff(self.u1, 1, self.dr)-2/self.r_grid[1:-1]*self.u1[1:-1])
                         -self.parameter.alpha/self.parameter.rho*self.central_diff(self.p1, 1, self.dr)
                         )
         u_dot_1[0] = 1/4/(np.pi*(self.r_grid[0]+self.u1[0]**2))\
                         *((self.parameter.Q_prod-np.pi*self.parameter.d**4/128/self.parameter.mu/self.parameter.L\
                             +4*self.parameter.k*np.pi*(self.r_grid[0]+self.u1[0])**2)\
-                            *(-3*self.p1[0]+4*self.p1[1]-self.p1[2]))
+                            *(-3*self.p1[0]+4*self.p1[1]-self.p1[2])/2/self.dr)
         u_dot_1[-1] = 0
         self.u_dot_1 = u_dot_1
 

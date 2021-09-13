@@ -8,7 +8,7 @@ uniformScheme = uniformGrid()
 ## set parameters
 setting.M = 500
 setting.T = 0.002
-setting.dt = 1e-6
+setting.dt = 1e-10
 
 uniformScheme.IC()
 
@@ -19,7 +19,7 @@ ax2.plot(uniformScheme.r_grid, uniformScheme.u_dot)
 ax3.plot(uniformScheme.r_grid, uniformScheme.p0)
 # plt.show()
 
-for t in range(int(setting.T/setting.dt)):
+for t in range(10):
     
     uniformScheme.update_u()
     uniformScheme.update_u_dummy()
@@ -32,12 +32,12 @@ for t in range(int(setting.T/setting.dt)):
     
     ax1.cla()
     
-    ax1.plot(uniformScheme.r_grid, uniformScheme.u0*1e+5)
+    ax1.plot(uniformScheme.r_grid, uniformScheme.u0)
     ax2.cla()
-    ax2.plot(uniformScheme.r_grid, uniformScheme.u_dot*1e+3)
+    ax2.plot(uniformScheme.r_grid, uniformScheme.u_dot)
     ax3.cla()
     ax3.plot(uniformScheme.r_grid, uniformScheme.p0)
     plt.suptitle('t={}'.format(t*setting.dt))   
     
-    plt.pause(0.001)
+    plt.pause(10)
     

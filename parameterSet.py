@@ -15,9 +15,9 @@ class parameter:
         self.k = 1.6*1e-11 #m^2
         self.L = 0.07 #m
         self.R = 8.5*1e+13 #m^-3
-        self.d = 0.25*1e-3
+        self.d = 4e-3
         self.rho = 1066.2
-
+        self.S = 4.5*1e-7
         self.nu = 0.35 #none
         self.mu = 8.9*1e-4 # Nm^-2s
         self.alpha = 0.9

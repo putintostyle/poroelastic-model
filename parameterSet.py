@@ -2,7 +2,7 @@ class parameter:
     def __init__(self):
         self.M = 500
         self.T = 0.002
-        self.dt = 1e-6
+        self.dt = 1e-5
         self.G = 216 #Nm^-2
 
         self.r_v = 0.03 #m

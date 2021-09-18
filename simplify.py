@@ -22,7 +22,7 @@ class simplifier:
         eq4 = c3-2*c4/(r_v**3)+nu/(1-nu)*2/r_v*(c3*r_v+c4/r_v**2+c1*xi/2)-(1-1/alpha)*xi*(c1/r_v+c2)
         c3 = solve(eq4, c3)[0]
 
-        print(simplify(-(c3*r_s**3+(c1*xi*r_s**2)/2)))
+        
         self.c1 = c1
         self.c2 = c2
         self.c3 = c3

@@ -19,7 +19,7 @@ class simplifier:
         # c1 = r_s*p_s-r_s*c2
         c2 = (r_s*p_s-c1)/r_s
         c4 = -(c3*r_s**3+(c1*xi*r_s**2)/2)
-        eq4 = c3-2*c4/(r_v**3)+nu/(1-nu)*2/r_v*(c3*r_v+c4/r_v**2+c1*xi/2)-(1-1/alpha)*(c1/r_v+c2)
+        eq4 = c3-2*c4/(r_v**3)+nu/(1-nu)*2/r_v*(c3*r_v+c4/r_v**2+c1*xi/2)-(1-1/alpha)*xi*(c1/r_v+c2)
         c3 = solve(eq4, c3)[0]
 
         print(simplify(-(c3*r_s**3+(c1*xi*r_s**2)/2)))
@@ -42,10 +42,11 @@ class simplifier:
         c3, c4 = symbols('c3 c4')
         xi, r_v, r_s, nu, alpha, p_s = self.xi, self.r_v, self.r_s, self.nu, self.alpha, self.p_s
         c1 = self.c1
+        c2 = self.c2
         # c1 = r_s*p_s-r_s*c2
-        c2 = (r_s*p_s-c1)/r_s
+        
         c4 = -(c3*r_s**3+(c1*xi*r_s**2)/2)
-        eq4 = c3-2*c4/(r_v**3)+nu/(1-nu)*2/r_v*(c3*r_v+c4/r_v**2+c1*xi/2)-(1-1/alpha)*(c1/r_v+c2)
+        eq4 = c3-2*c4/(r_v**3)+nu/(1-nu)*2/r_v*(c3*r_v+c4/r_v**2+c1*xi/2)-(1-1/alpha)*xi*(c1/r_v+c2)
         
         self.c3 = solve(eq4, c3)[0]
         self.c4 = -(self.c3*r_s**3+(c1*xi*r_s**2)/2)

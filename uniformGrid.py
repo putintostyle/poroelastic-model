@@ -51,7 +51,7 @@ class uniformGrid:
                           -self.parameter.alpha/self.parameter.rho*(-3*self.p0[0]+4*self.p0[1]-self.p0[2])/2/self.dr
         
         self.u_dummy[-1] = 0
-        print('u = {}'.format(self.u_dummy[:6]))
+        
         
     def update_p(self):
         
@@ -64,7 +64,7 @@ class uniformGrid:
         
         p1[0] = 2*self.parameter.G/(1-2*self.parameter.nu)/(self.parameter.alpha-1)*\
                 ((1-self.parameter.nu)*(-3*self.u1[0]+4*self.u1[1]-self.u1[2])/2/self.dr+2*self.parameter.nu/self.r_grid[0]*self.u1[0])
-        print('p = {}'.format(p1[:5]))
+        
         p1[-1] = self.parameter.p_v+self.parameter.mu*self.parameter.R*self.parameter.Q_obs
         self.p1 = p1
         

@@ -20,7 +20,7 @@ fig, (ax1, ax2, ax3) = plt.subplots(3)
 # ax2.plot(uniformScheme.r_grid, uniformScheme.u_dot)
 # ax3.plot(uniformScheme.r_grid, uniformScheme.p0)
 # plt.show()
-for t in range(600):
+for t in range(2000):
     
     uniformScheme.update_u()
     uniformScheme.update_u_dummy()
@@ -41,5 +41,5 @@ for t in range(600):
     ax3.plot(uniformScheme.r_grid, uniformScheme.p0)
     plt.suptitle('t={}'.format(t*uniformScheme.dt))   
     
-    plt.pause(uniformScheme.dt/100)
+    plt.pause(uniformScheme.dt)
 plt.show() 
